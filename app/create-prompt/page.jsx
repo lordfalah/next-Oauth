@@ -35,7 +35,10 @@ const CreatePrompt = () => {
         }),
       });
 
-      if (repsonse.ok) router.push("/");
+      if (repsonse.ok) {
+        router.refresh();
+        router.push("/");
+      }
     } catch (error) {
       console.log(error);
     } finally {

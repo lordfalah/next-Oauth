@@ -1,72 +1,33 @@
-"use client";
-
+import { authOptions } from "@app/api/auth/[...nextauth]/route";
 import Profile from "@components/Profile";
-import useDispatch from "@utils/hooks/useDispatch";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { getServerSession } from "next-auth";
 
-const MyProfile = () => {
-  const { data: session } = useSession();
-  const { state, dispatch } = useDispatch();
-  const router = useRouter();
+export const dynamic = "force-dynamic";
 
-  const getProfile = async () => {
-    try {
-      const response = await fetch(`/api/users/${session?.user?.id}/post`);
-      const result = await response.json();
-      dispatch({
-        type: "GET",
-        data: result?.data,
-      });
-    } catch (error) {
-      dispatch({
-        type: "ERROR",
-        error: error,
-      });
-    } finally {
-      dispatch({
-        type: "FINAL",
-      });
-    }
-  };
+export const getMyPrompt = async () => {
+  try {
+    const session = await getServerSession(authOptions);
+    const response = await prisma.user.findFirst({
+      where: {
+        id: parseInt(session?.user?.id),
+      },
 
-  useEffect(() => {
-    if (session?.user?.id) getProfile();
-  }, [session?.user?.id]);
+      include: {
+        prompt: true,
+      },
+    });
 
-  const onDelete = async (id) => {
-    try {
-      const response = await fetch(`/api/users/${id}/post`, {
-        method: "DELETE",
-      });
-      await response.json();
-      const filterPrompt = state?.data?.prompt.filter(
-        (prompt) => prompt.id !== id
-      );
+    return response;
+  } catch (error) {
+    console.log({ error });
+    return error;
+  }
+};
 
-      dispatch({
-        type: "GET",
-        data: {
-          ...state?.data,
-          prompt: filterPrompt,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const onEdit = () => {};
+const MyProfile = async () => {
+  const prompt = await getMyPrompt();
 
-  return (
-    <Profile
-      data={state}
-      name="Profile"
-      desc="Des"
-      onDelete={onDelete}
-      onEdit={onEdit}
-    />
-  );
+  return <Profile state={{ data: prompt }} name="Profile" desc="Des" />;
 };
 
 export default MyProfile;

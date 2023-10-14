@@ -1,13 +1,30 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import PromptCard from "./PromptCard";
 
-const Profile = ({ data, name, desc, onDelete, onEdit }) => {
+const Profile = ({ state, name, desc }) => {
+  const router = useRouter();
+
+  const onDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/users/${id}/post`, {
+        method: "DELETE",
+      });
+      await response.json();
+
+      if (response.ok) {
+        router.refresh();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const onEdit = () => {};
+
   return (
     <section className="w-full">
-      <div className="">
+      <div className="space-y-8">
         <div className="space-y-4">
           <h1 className="text-5xl font-black">My {name}</h1>
           <p className="text-black/70 text-lg">
@@ -18,55 +35,8 @@ const Profile = ({ data, name, desc, onDelete, onEdit }) => {
           </p>
         </div>
 
-        <div className="flex flex-col mt-10 gap-y-6">
-          {data?.data?.prompt?.map(({ prompt, tag, id }, idx) => (
-            <div
-              key={idx}
-              className="w-full p-3.5 rounded-sm space-y-3 glassmorphism"
-            >
-              <div className="flex justify-between">
-                <div className="flex gap-x-3">
-                  <Image
-                    src={data?.data?.image || ""}
-                    alt={data?.data?.username}
-                    width={40}
-                    height={40}
-                    className="w-10 h-10 rounded-full"
-                    loading="lazy"
-                  />
-                  <div>
-                    <h4 className="font-semibold">{data?.data?.username}</h4>
-                    <span>{data?.data?.email}</span>
-                  </div>
-                </div>
-
-                <div
-                  className="rounded-full bg-white/10 p-1.5 w-7 h-7 cursor-pointer"
-                  onClick={() => onCopy(prompt)}
-                >
-                  <Image
-                    src={"/assets/icons/copy.svg"}
-                    width={12}
-                    height={12}
-                    className="mx-auto my-auto stroke-gray-500"
-                    alt="img"
-                  />
-                </div>
-              </div>
-
-              <article className="text-sm space-y-3">
-                <p>{prompt}</p>
-                <p className="text-blue-400/80">{tag}</p>
-              </article>
-
-              <div className="mx-auto text-center flex justify-center gap-x-4">
-                <Link href={`/update-prompt/${id}`}>Edit</Link>
-                <button onClick={() => onDelete(id)} type="button">
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-5 lg:gap-4">
+          <PromptCard state={state} onDelete={onDelete} onEdit={onEdit} />
         </div>
       </div>
     </section>

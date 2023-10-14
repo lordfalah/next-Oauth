@@ -26,7 +26,10 @@ const UpdateForm = () => {
         method: "PATCH",
       });
 
-      if (response.ok) router.push("/");
+      if (response.ok) {
+        router.refresh();
+        router.push("/");
+      }
     } catch (error) {
       dispatch({
         type: "ERROR",

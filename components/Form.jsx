@@ -55,13 +55,15 @@ const Form = ({ type, title, submitting, post, onChanges, handleSubmit }) => {
         </div>
 
         <div className="flex justify-end text-sm gap-x-4 items-center">
-          <Link href="/" className="text-gray-500">
+          <Link href="/profile" className="text-gray-500">
             Cancel
           </Link>
           <button
             type="submit"
             disabled={submitting}
-            className="py-1.5 px-4 bg-orange-400 rounded-full text-white"
+            className={`py-1.5 px-4 bg-orange-400 rounded-full text-white ${
+              submitting ? "cursor-not-allowed" : "cursor-pointer"
+            }`}
           >
             {submitting ? `Submit...` : "Submit"}
           </button>

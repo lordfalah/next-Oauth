@@ -10,7 +10,7 @@ const Feed = () => {
   };
 
   return (
-    <div className="mt-14 mb-20">
+    <div className="mt-10 mb-16 md:mt-14 md:mb-20">
       <label className="bg-white" id="search">
         <input
           className="w-full px-4 py-1.5 border-0 ring-inset rounded-md shadow-md"

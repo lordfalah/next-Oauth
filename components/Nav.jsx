@@ -110,14 +110,15 @@ const Nav = () => {
               >
                 My Profile
               </Link>
-
-              <Link
-                href="/create-prompt"
-                className="text-black/80"
-                onClick={() => setTogleDropdown(true)}
-              >
-                Create Prompt
-              </Link>
+              {session?.user && (
+                <Link
+                  href="/create-prompt"
+                  className="text-black/80"
+                  onClick={() => setTogleDropdown(true)}
+                >
+                  Create Prompt
+                </Link>
+              )}
             </div>
 
             <div className="mt-6">

@@ -10,6 +10,7 @@ export const authOptions = {
         return {
           ...profile,
           id: profile.sub,
+          role: "user",
         };
       },
       clientId: process.env.GOOGLE_ID,
@@ -18,7 +19,12 @@ export const authOptions = {
   ],
 
   callbacks: {
-    async session({ session }) {
+    jwt({ token, user }) {
+      if (user) token.role = user.role;
+      return token;
+    },
+
+    async session({ session, token }) {
       if (session) {
         const sessionUser = await prisma.user.findUnique({
           where: {
@@ -29,6 +35,7 @@ export const authOptions = {
         if (sessionUser) {
           session.user.id = sessionUser.id.toString();
           session.user.image = sessionUser.image;
+          session.user.role = sessionUser.role;
         }
       }
       return session;
