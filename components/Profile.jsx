@@ -28,10 +28,9 @@ const Profile = ({ state, name, desc }) => {
         <div className="space-y-4">
           <h1 className="text-5xl font-black">My {name}</h1>
           <p className="text-black/70 text-lg">
-            {desc} Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-            Accusantium temporibus sequi dolore provident labore qui quaerat
-            maiores, molestias excepturi, necessitatibus nam facere magnam, eius
-            quod cum quibusdam consectetur dolores omnis.
+            {desc} My Profile. Accusantium temporibus sequi dolore provident
+            labore qui quaerat maiores, molestias excepturi, necessitatibus nam
+            facere magnam, eius quod cum quibusdam consectetur dolores omnis.
           </p>
         </div>
 
